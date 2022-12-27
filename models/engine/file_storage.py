@@ -23,7 +23,20 @@ class FileStorage():
 
     def reload(self):
         """Deserializes the JSON file to __objects (only if the JSON file (__file_path) exists"""
-        if os.path.isfile("file.json"):
-            with open(FileStorage.__fil_path) as file:
-                obj_dict = json.load(file)
+        from models.base_model import BaseModel
+        from models.user import User
+        from models.place import Place
+        from models.city import City
+        from models.amenity import Amenity
+        from models.state import State
+        from models.review import Review
+        dct = {'BaseModel': BaseModel, 'User': User, 'Place': Place,
+               'City': City, 'Amenity': Amenity, 'State': State,
+               'Review': Review}
+
+        if os.path.exists(FileStorage.__file_path) is True:
+            with open(FileStorage.__file_path, 'r') as f:
+                for key, value in json.load(f).items():
+                    self.new(dct[value['__class__']](**value))
                 
+                                                                     
